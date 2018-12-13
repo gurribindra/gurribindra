@@ -1,0 +1,22 @@
+#Create Network for DNS server
+  - os_network:
+      state: present
+      name: "{{nic_net_name}}"
+      external: False
+
+  - os_subnet:
+      state: present
+      network_name: "{{nic_net_name}}"
+      name: subnet1
+      cidr: "{{subnet_cidr}}"
+      dns_nameservers:
+        - 8.8.8.8
+        - 8.8.4.4
+    register: nic_subnet
+#Create a router and associate it with an external 
+  - os_router:
+      state: present
+      name: Standalone_Dns_Environment_Router
+      network: public_network
+      interfaces: 
+        - subnet1
